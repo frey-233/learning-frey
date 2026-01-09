@@ -19,12 +19,12 @@ int main(int argc, char **argv) {
     ASSERT(observer.use_count() == 2, "");
 
     ptrs[2] = std::make_shared<int>(*shared);
-    ASSERT(observer.use_count() == 5, "");
+    ASSERT(observer.use_count() == 1, "");
 
     ptrs[0] = shared;
     ptrs[1] = shared;
     ptrs[2] = std::move(shared);
-    ASSERT(observer.use_count() == 4, "");
+    ASSERT(observer.use_count() == 3, "");
 
     std::ignore = std::move(ptrs[0]);
     ptrs[1] = std::move(ptrs[1]);
@@ -36,10 +36,10 @@ int main(int argc, char **argv) {
 
     shared = nullptr;
     for (auto &ptr : ptrs) ptr = nullptr;
-    ASSERT(observer.use_count() == 1, "");
+    ASSERT(observer.use_count() == 0, "");
 
     shared = observer.lock();
-    ASSERT(observer.use_count() == 2, "");
+    ASSERT(observer.use_count() == 0, "");
 
     return 0;
 }
